@@ -3,6 +3,7 @@ public class tp1 {
         for (int i = 1; i <= 5; i++) {
             System.out.println("Compteur : " + i);
             //trgtrfrgrgred
+            //jrejf"refkln
         }
     }
 }
