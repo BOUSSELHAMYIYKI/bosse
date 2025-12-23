@@ -1,36 +1,39 @@
 pipeline {
     agent any
 
-    tools {
-        jdk 'jdk21'
-    }
-
     stages {
+
         stage('Checkout SCM') {
             steps {
-                git 'https://github.com/BOUSSELHAMYIYKI/bosse.git'
+                git url: 'https://github.com/BOUSSELHAMYIYKI/bosse.git', branch: 'master'
+            }
+        }
+
+        stage('Check Java') {
+            steps {
+                sh 'java -version'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'javac Boucle.java'
+                sh 'javac untitled1/src/Boucle.java'
             }
         }
 
         stage('Run') {
             steps {
-                sh 'java Boucle'
+                sh 'java -cp untitled1/src Boucle'
             }
         }
     }
 
     post {
         success {
-            echo '✅ Build avec Java 21 réussi'
+            echo '✅ Build Java réussi'
         }
         failure {
-            echo '❌ Erreur Java'
+            echo '❌ Erreur lors du build Java'
         }
     }
 }
