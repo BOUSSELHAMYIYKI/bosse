@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // نسخ المشروع من Git
+                git branch: 'main', url: 'https://github.com/TON_REPO.git'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                // Compile Java program
+                sh 'javac Boucle.java'
+            }
+        }
+
+        stage('Run') {
+            steps {
+                // Execute the program
+                sh 'java Boucle'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Le programme Java a été exécuté avec succès !'
+        }
+        failure {
+            echo 'Erreur lors de l’exécution du programme Java.'
+        }
+    }
+}
