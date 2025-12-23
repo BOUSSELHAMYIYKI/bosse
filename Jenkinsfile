@@ -17,13 +17,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'javac untitled1/src/Boucle.java'
+                sh 'javac untitled1/src/tp1.java'
             }
         }
 
         stage('Run') {
             steps {
-                sh 'java -cp untitled1/src Boucle'
+                sh 'java -cp untitled1/src tp1'
             }
         }
     }
