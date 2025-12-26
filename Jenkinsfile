@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        dockerfile true
-    }
+    agent any
 
     stages {
 
@@ -11,7 +9,19 @@ pipeline {
             }
         }
 
-        stage('Run Java App') {
+        stage('Check Java') {
+            steps {
+                sh 'java -version'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'javac untitled1/src/tp1.java'
+            }
+        }
+
+        stage('Run') {
             steps {
                 sh 'java -cp untitled1/src tp1'
             }
@@ -20,10 +30,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build & Run  Docker '
+            echo '✅ Build Java réussi'
         }
         failure {
-            echo ' Docker'
+            echo '❌ Erreur lors du build Java'
         }
     }
 }
