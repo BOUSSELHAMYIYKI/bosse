@@ -1,39 +1,56 @@
 pipeline {
-    agent any
-
-    stages {
-
-        stage('Checkout SCM') {
-            steps {
-                git url: 'https://github.com/BOUSSELHAMYIYKI/bosse.git', branch: 'master'
-            }
-        }
-
-        stage('Check Java') {
-            steps {
-                sh 'java -version'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'javac untitled1/src/tp1.java'
-            }
-        }
-
-        stage('Run') {
-            steps {
-                sh 'java -cp untitled1/src tp1'
-            }
-        }
+ agent any
+ environment {
+ IMAGE_NAME = "tp1-java-app:latest"
+ CONTAINER_NAME = "tp1-java-container"
+ HOST_PORT = "8081"
+ CONTAINER_PORT = "8080"
+ }
+ stages {
+ stage('Checkout') {
+ steps {
+ git branch: 'master', url: 'https://github.com/BOUSSELHAMYIYKI/bosse.git'
+ }
+ }
+ stage('Build') {
+ steps {
+ sh 'mvn -B clean package -DskipTests'
+  }
+  }
+  stage('Test') {
+  steps {
+  sh 'mvn -B test'
+  }
+  post {
+  always {
+  junit '**/target/surefire-reports/*.xml'
+  }
+  }
+  }
+  stage('Docker Build') {
+   steps {
+   sh 'docker build -t $IMAGE_NAME .'
+   }
+   }
+   stage('Deploy (Local Docker)') {
+   steps {
+   sh '''
+   docker stop $CONTAINER_NAME || true
+   docker rm $CONTAINER_NAME || true
+   docker run -d \
+   --name $CONTAINER_NAME \
+   -p ${HOST_PORT}:${CONTAINER_PORT} \
+   $IMAGE_NAME
+   '''
+   }
+   }
+   }
+   post {
+   success {
+   echo "✅ Déploiement local terminé"
+   }
+    failure {
+    echo "❌ Erreur dans le pipeline"
     }
-
-    post {
-        success {
-            echo '✅ Build Java réussi'
-        }
-        failure {
-            echo '❌ Erreur lors du build Java'
-        }
     }
-}
+   }

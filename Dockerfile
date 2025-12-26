@@ -1,6 +1,5 @@
-
-FROM openjdk:21-jdk
+FROM eclipse-temurin:17-jre
 WORKDIR /app
-COPY . /app
-RUN javac untitled1/src/tp1.java
-CMD ["java", "-cp", "untitled1/src", "tp1"]
+COPY target/*.jar app.jar
+EXPOSE 8080
+CMD ["java","-jar","app.jar"]
