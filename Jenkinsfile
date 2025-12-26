@@ -21,6 +21,13 @@ pipeline {
             }
         }
 
+        stage('Check Java') {
+            steps {
+                echo "🟢 Vérification de la version Java dans le conteneur Docker"
+                sh "docker run --rm ${DOCKER_IMAGE} java -version"
+            }
+        }
+
         stage('Run Java Program') {
             steps {
                 echo "▶️ Lancement du conteneur Docker et exécution du programme Java"
